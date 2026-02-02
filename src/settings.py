@@ -1,0 +1,17 @@
+import json
+
+class Settings:
+
+    def __init__(self, settings_path):
+        try:
+            self.json = json.load(open(settings_path))
+            self.source = self.json["source"]
+            self.job_name = self.json["job_name"]
+            self.model = self.json["model"]
+            self.existing_branch = self.json["existing_branch"]
+            self.response_dir = self.json["response_dir"]
+            self.ignore_elements = self.json["ignore_elements"]
+            self.workspace_path = self.json["workspace_path"]
+        except:
+            raise Exception("invalid settings")
+
