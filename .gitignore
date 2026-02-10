@@ -3,3 +3,4 @@ agents_settings.json
 settings.json
 jobs/*
 .DS_STORE
+.env
