@@ -1,6 +1,7 @@
+.env
+.DS_STORE
 __pycache__
 agents_settings.json
-settings.json
+IA_INFO
 jobs/*
-.DS_STORE
-.env
+settings.json

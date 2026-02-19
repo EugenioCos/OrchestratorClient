@@ -41,12 +41,12 @@ class FileEditor:
         return path
         
     def write_in_workspace_file(self, rel_path: str, text: str) -> str:
-        if rel_path not in self.workspace.files: return "Permission denied, file does not exist or you can't access and must assume is correct"
+        if rel_path not in self.workspace.files: return "Permission denied or file does not exist"
         self.safe_file_operation(rel_path, 'w', text, "Cannot write in workspace file")
         return "OK"
     
     def read_in_workspace_file(self, rel_path: str) -> str:
-        if rel_path not in self.workspace.files: return "Permission denied, file does not exist or you can't access and must assume is correct"
+        if rel_path not in self.workspace.files: return "Permission denied or file does not exist"
         text = self.safe_file_operation(rel_path, 'r', None, "Cannot read a workspace file")
         return text
     
