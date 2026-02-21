@@ -27,7 +27,7 @@ class Client:
             self.sock = context.wrap_socket(plain_sock, server_hostname=self.host)
             print(f"[TLS]  Versione: {self.sock.version()}")
         else:
-            self.sock = socket.create_connection((None, 5433))
+            self.sock = socket.create_connection(("localhost", 5433))
         print(f"[CONN] Connesso a {self.host}")
         self.reader = self.sock.makefile("r", encoding="utf-8", newline="\r\n")
     
