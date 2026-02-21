@@ -42,10 +42,44 @@ class Client:
         return self.reader.readline() # http body
 
     def send(self, body: bytes, method: str):
-        header = self.http.create_header(len(body + b'\r\n') if body is not None else 0, method)
+        """
+        Invia una richiesta HTTP sul socket.
+
+        Problema originale
+        ------------------
+        Il codice calcolava la lunghezza del payload così:
+
+            len(body + b'\r\n')   # aggiungeva “\r\n” al conteggio
+
+        e poi, dopo aver costruito l'header, aggiungeva nuovamente
+        ``body + b'\r\n'`` al messaggio.  Il valore indicato nell'header
+        **Content‑Length** era quindi più grande del numero di byte realmente
+        trasmessi. Il server rimaneva in attesa di dati aggiuntivi e la
+        connessione si bloccava, provocando timeout o errori di comunicazione.
+
+        Soluzione
+        ---------
+        - Calcolare la lunghezza *esatta* del corpo con ``len(body)`` (senza
+          alcun newline).
+        - Costruire l'header usando questo valore.
+        - Terminare l'header con una riga vuota (``\r\n\r\n``), come richiede
+          l'HTTP.
+        - Concatenare **solo** il corpo originale, senza aggiungere un ulteriore
+          ``\r\n``.
+
+        Con questa modifica il valore di ``Content‑Length`` corrisponde al vero
+        numero di byte inviati e la comunicazione con il server avviene correttamente.
+        """
+        body_len = len(body) if body is not None else 0
+        header = self.http.create_header(body_len, method)
+
+        # L'header deve terminare con una riga vuota (CRLF CRLF)
         header_section = "\r\n".join(header) + "\r\n\r\n"
         http_message = header_section.encode("utf-8")
-        if body is not None: http_message +=  body + b'\r\n'
+
+        if body is not None:
+            http_message += body                     # nessun CRLF aggiuntivo
+
         self.sock.sendall(http_message)
         print("[SEND] In attesa della risposta…")
 
