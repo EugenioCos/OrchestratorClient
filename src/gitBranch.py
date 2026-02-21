@@ -37,6 +37,15 @@ class GitBranch:
         return True
     
     def revert_last_commit(self):
-        commit_id = self.git_cmd.execute(["git", "log", "-n 1", "--oneline"]).split(' ')[0]
+        """
+        Revert the repository to the previous commit.
+        """
+        # Ottieni l'ID dell'ultimo commit (prima della revert)
+        # git.log restituisce qualcosa come "abcd1234 Messaggio", quindi prendiamo il primo token.
+        log_output = self.git_cmd.execute(["git", "log", "-n", "1", "--oneline"])
+        commit_id = log_output.split()[0]
+
         print(f"[COMMIT] revert to commit id {commit_id}")
-        self.git_cmd.execute("git", "reset", "--hard", commit_id)
+
+        # Esegui il reset hard al commit individuato.
+        self.git_cmd.execute(["git", "reset", "--hard", commit_id])
