@@ -16,8 +16,11 @@ class GitBranch:
             self.git_cmd.checkout("HEAD", b=self.branch_name) # Create a new branch.
         else:
             self.branch_name = branch_name
-            git_path = os.path.join(workspace_path, branch_name, ".git/")
-            self.repo = Repo(git_path)
+            # Il nome del branch è già stato specificato: apriamo il repository
+            # esistente.  **Repo** richiede il percorso della directory radice
+            # del repository, non quello della sotto‑cartella `.git/`.
+            repo_root = os.path.join(workspace_path, branch_name)
+            self.repo = Repo(repo_root)          # <-- correzione
             self.git_cmd = self.repo.git
 
     def commit(self, commit_message: str, files: list[str]) -> bool:
