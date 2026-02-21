@@ -36,7 +36,15 @@ class Workspace:
         print(f"Workspace in {self.path}")
 
     def commit(self, commit_message: str) -> bool:
-        return self.branch.commit(commit_message, self.workspace_files)
+        """
+        Esegue il commit dei file modificati.
+
+        ``GitBranch.commit`` richiede percorsi relativi al repository.
+        ``self.files`` è già la lista di percorsi che il repository considera, già normalizzati con `os.path.relpath` in `scan_files`.  Usare ``self.workspace_files`` (percorsi assoluti)
+        impedisce a GitPython di aggiungere i file all’indice, facendo
+        fallire il commit.
+        """
+        return self.branch.commit(commit_message, self.files)
     
     def revert_commit(self):
         self.branch.revert_last_commit()
