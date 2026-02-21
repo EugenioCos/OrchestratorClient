@@ -6,14 +6,22 @@ try:
 except ImportError:
     pass
 
-class Http:
 
+class Http:
+    """
+    Http helper that builds requests and parses responses.
+    The Cloudflare Access headers are optional – they are added only
+    when the corresponding environment variables are defined.
+    """
+
+    # ------------------------------------------------------------------
+    # Lettura (opzionale) delle credenziali Cloudflare Access.
+    # Se non sono impostate, continuiamo comunque.
+    # ------------------------------------------------------------------
     CLIENT_ID = os.getenv("ACCESS_CLIENT_ID")
-    if not CLIENT_ID:
-        raise Exception("ACCESS_CLIENT_ID environment variable not set")
     CLIENT_SECRET = os.getenv("ACCESS_CLIENT_SECRET")
-    if not CLIENT_SECRET:
-        raise Exception("ACCESS_CLIENT_SECRET environment variable not set")
+    # NOTE: non solleviamo più eccezioni qui; i controlli saranno fatti
+    #       solo al momento della costruzione dell'header.
 
     def __init__(self, host):
         self.host = host
@@ -55,9 +63,15 @@ class Http:
             "User-Agent: python-socket-client/1.0",
             "Content-Type: application/json; charset=utf-8",
             f"Content-Length: {body_size}",
-            "Connection: keep-alive"
+            "Connection: keep-alive",
         ]
+        # Add cookie if we already received one
         if self.cookie is not None:
             header.append(f"Cookie: {self.cookie}")
-        header.extend([f"CF-Access-Client-Id: {self.CLIENT_ID}", f"CF-Access-Client-Secret: {self.CLIENT_SECRET}"])
+        # Add Cloudflare Access headers only when they are defined
+        if self.CLIENT_ID:
+            header.append(f"CF-Access-Client-Id: {self.CLIENT_ID}")
+        if self.CLIENT_SECRET:
+            header.append(f"CF-Access-Client-Secret: {self.CLIENT_SECRET}")
         return header
+
