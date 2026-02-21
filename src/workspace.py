@@ -59,6 +59,6 @@ class Workspace:
                     continue
                 # Add relative path to files list
                 file_path = os.path.join(root, filename)
-                filtered = file_path.replace(self.path+"/", "")
+                filtered = os.path.relpath(file_path, self.path)
                 self.files.append(filtered)
                 
