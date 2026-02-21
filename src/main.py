@@ -78,7 +78,7 @@ while(resp):
         response = file_editor.write_in_context(
             data_json["prompt_title"], data_json["context"]
         )
-        response.replace(workspace.path, "")
+        response = response.replace(workspace.path, "")
     elif data_json["command"] == "info":
         print(data_json["info"])
         response = "OK"
