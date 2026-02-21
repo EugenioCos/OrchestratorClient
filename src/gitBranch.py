@@ -43,21 +43,16 @@ class GitBranch:
     
     def revert_last_commit(self) -> bool:
         """
-        Revert the repository to the previous commit.
+        Revert the repository to the commit *precedente* all'ultimo.
         Returns ``True`` if the reset succeeded, ``False`` otherwise.
         """
         try:
-            # Ottieni l'ID dell'ultimo commit (prima della revert)
-            # ``git log -n 1 --oneline`` restituisce qualcosa come
-            # ``abcd1234 Messaggio``; ne prendiamo il primo token.
-            log_output = self.repo.git.log("-n", "1", "--oneline")
-            commit_id = log_output.split()[0]
-
-            print(f"[COMMIT] revert to commit id {commit_id}")
-
-            # Esegui il reset hard al commit individuato.
-            self.repo.git.reset("--hard", commit_id)
+            # Spostiamo HEAD al commit precedente (HEAD~1).  Questo rimuove
+            # l'ultimo commit dall'albero di lavoro, ripristinando lo stato
+            # precedente.
+            self.repo.git.reset("--hard", "HEAD~1")
+            print("[COMMIT] reverted to previous commit (HEAD~1)")
             return True
         except Exception as e:
-            # In caso di errore, forniamo un messaggio più chiaro.
+            # Forniamo un messaggio d'errore più esplicito.
             raise Exception(f"Failed to revert last commit: {e}")
