@@ -19,9 +19,19 @@ class GitBranch:
             self.git_cmd = self.repo.git
 
     def commit(self, commit_message: str, files: list[str]) -> bool:
+        """
+        Aggiunge i file indicati all’indice e, se ci sono effettive modifiche,
+        effettua il commit. Restituisce True se il commit è stato eseguito,
+        False altrimenti.
+        """
         self.repo.index.add(files)
-        if '.' not in self.git_cmd.diff("--cached", "--name-only"):
+
+        # Git restituisce una stringa vuota quando non ci sono differenze.
+        # Usare una verifica di “empty string” è più affidabile di cercare '.'
+        staged_changes = self.git_cmd.diff("--cached", "--name-only")
+        if not staged_changes:          # Nessuna modifica da committare
             return False
+
         self.repo.index.commit(commit_message)
         print("Commit done")
         return True
