@@ -20,8 +20,13 @@ class GitBranch:
             # esistente.  **Repo** richiede il percorso della directory radice
             # del repository, non quello della sotto‑cartella `.git/`.
             repo_root = os.path.join(workspace_path, branch_name)
-            self.repo = Repo(repo_root)          # <-- correzione
+            self.repo = Repo(repo_root)
             self.git_cmd = self.repo.git
+            # Ensure we are on the requested branch
+            try:
+                self.git_cmd.checkout(self.branch_name)
+            except Exception as exc:
+                raise Exception(f"Impossibile fare checkout del branch '{self.branch_name}': {exc}")
 
     def commit(self, commit_message: str, files: list[str]) -> bool:
         """
