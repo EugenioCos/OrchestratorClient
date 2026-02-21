@@ -13,7 +13,7 @@ class GitBranch:
             # clone_from creates dest_path automatically
             self.repo = Repo.clone_from(source, dest_path)
             self.git_cmd = self.repo.git
-            self.git_cmd.checkout("HEAD", b=self.branch_name) # Create a new branch.
+            self.git_cmd.checkout("-b", self.branch_name)   # Create a new branch.
         else:
             self.branch_name = branch_name
             # Il nome del branch è già stato specificato: apriamo il repository
