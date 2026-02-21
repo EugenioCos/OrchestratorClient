@@ -11,9 +11,12 @@ class FileEditor:
         self.context_path = os.path.join(self.response_dir, "contexts/")
         self.fails_path = os.path.join(self.response_dir, "fails.md")
         self.response_path = os.path.join(self.response_dir, "response.md")
-        if settings.existing_branch is None:
-            os.makedirs(self.response_dir)
-            os.makedirs(self.context_path)
+        # Le directory devono sempre esistere, indipendentemente dal fatto
+        # che si lavori su un nuovo branch o su uno già esistente.
+        # ``exist_ok=True`` evita errori se le cartelle sono già state create
+        # in esecuzioni precedenti.
+        os.makedirs(self.response_dir, exist_ok=True)
+        os.makedirs(self.context_path, exist_ok=True)
         with open(self.corrections_path, 'w', encoding='utf-8'): pass
         with open(self.fails_path, 'w', encoding='utf-8'): pass
         with open(self.response_path, 'w', encoding='utf-8'): pass
