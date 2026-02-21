@@ -32,6 +32,9 @@ class Workspace:
     def commit(self, commit_message: str) -> bool:
         return self.branch.commit(commit_message, self.workspace_files)
     
+    def revert_commit(self):
+        self.branch.revert_last_commit()
+    
     def scan_files(self) -> None:
         # Scan all files to be considered
         for root, dirs, files in os.walk(self.path):

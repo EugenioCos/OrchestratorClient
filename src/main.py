@@ -84,10 +84,12 @@ while(resp):
         response = "OK"
     elif data_json["command"] == "commit":
         response = workspace.commit(data_json["title"])
+    elif data_json["command"] == "revert_commit":
+        response = workspace.revert_commit()
     response_dict = {"response": response}
     response_str = json.dumps(response_dict).encode(encoding="utf-8")
     try:
-        client.send(response_str, "GET")
+        client.send(response_str, "POST")
         resp = client.get_message()
     except Exception as e:
         print("Interrupted")

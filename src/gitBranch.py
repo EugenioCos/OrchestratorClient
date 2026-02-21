@@ -25,3 +25,8 @@ class GitBranch:
         self.repo.index.commit(commit_message)
         print("Commit done")
         return True
+    
+    def revert_last_commit(self):
+        commit_id = self.git_cmd.execute(["git", "log", "-n 1", "--oneline"]).split(' ')[0]
+        print(f"[COMMIT] revert to commit id {commit_id}")
+        self.git_cmd.execute("git", "reset", "--hard", commit_id)
