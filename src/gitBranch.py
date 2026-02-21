@@ -7,8 +7,10 @@ class GitBranch:
         if branch_name is None:
             random_id = ''.join(random.choices(string.digits, k=4))
             self.branch_name = f"{name_start}_{random_id}"
-            os.mkdir(os.path.join(workspace_path, self.branch_name))
+            # Ensure the workspace root exists
+            os.makedirs(workspace_path, exist_ok=True)
             dest_path = os.path.join(workspace_path, self.branch_name)
+            # clone_from creates dest_path automatically
             self.repo = Repo.clone_from(source, dest_path)
             self.git_cmd = self.repo.git
             self.git_cmd.checkout("HEAD", b=self.branch_name) # Create a new branch.
