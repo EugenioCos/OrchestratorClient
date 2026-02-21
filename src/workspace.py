@@ -57,6 +57,7 @@ class Workspace:
         """
         # Reset the list each time the method is called
         self.files.clear()
+        self.workspace_files.clear()
 
         # Scan all files to be considered
         for root, dirs, files in os.walk(self.path):
