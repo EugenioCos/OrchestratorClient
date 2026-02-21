@@ -60,7 +60,7 @@ if resp is None:
 while(resp):
     print(f"\r\n{resp.strip()}")
     data_json = json.loads(resp)
-    print(f"[COMMAND] {data_json["command"]}")
+    print(f"[COMMAND] {data_json['command']}")
     response = None
     if data_json["command"] == "replace_in_file":
         response = replace_in_file(
