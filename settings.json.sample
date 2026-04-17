@@ -1,0 +1,17 @@
+{
+    "source": "link to the repo",
+    "job_name": "job name without .json(inside the job folder) or null",
+    "existing_branch": "name of the existing worspace or null",
+    "multi_agent_model": "name of the model inside the provider",
+    "model": "name of the model inside the provider",
+    "response_dir": "IA_INFO/",
+    "workspace_path": "absolute path to the worspace folder (the folder where to create worspaces)",
+    "ignore_elements": [
+        "list",
+        "of",
+        "additionals",
+        "files",
+        "to",
+        "ignore"
+    ]
+}

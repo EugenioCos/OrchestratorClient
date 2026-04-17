@@ -1,0 +1,45 @@
+{
+    "executions_count": 1,
+    "prompts": [
+        {
+            "title": "Lista",
+            "text": "Seleziona i file del progetto meno chiari e complicati da comprendere.",
+            "agent": "Lettore",
+            "think": false
+        },
+        {
+            "title": "Correzione",
+            "text": "Commenta le linee, le funzioni e le classi che non sono documentate per rendere tutto il codice chiaro e documentato nel dettaglio. LASCIA INVARIATO IL CODICE E NON AGGIUNGERE COMMENTI Già PRESENTI.",
+            "agent": "Correttore",
+            "context_prompts": ["Lista"],
+            "commit": true,
+            "next_on_fail": "Correzione",
+            "reset_on_fail": ["Correzione"],
+            "reset_on_success": ["Valutazione Correzione"],
+            "think": false
+        },
+        {
+            "title": "Valutazione Correzione",
+            "text": "Leggi i file e approva se sono solo stati aggiunti commenti senza modificare codice, rifiuta se è stato modificato del codice.",
+            "agent": "Supervisore",
+            "context_prompts": ["Correzione"],
+            "think": false,
+            "must_decide": true,
+            "decision_type": "undo_change",
+            "reset_on_fail": ["Correzione", "Valutazione Correzione"],
+            "next_on_success": "Valutazione Fine",
+            "next_on_fail": "Correzione"
+        },
+        {
+            "title": "Valutazione Fine",
+            "text": "'Approva' se il progetto è completamente chiaro e ben documentato. 'Rifiuta' se possono essere introdotti chiarimenti.",
+            "agent": "Supervisore",
+            "context_prompts": ["Correzione"],
+            "think": false,
+            "must_decide": true,
+            "decision_type": "end",
+            "reset_on_fail": ["Correzione", "Valutazione Correzione", "Valutazione Fine"],
+            "next_on_fail": "Lista"
+        }
+    ]
+}
